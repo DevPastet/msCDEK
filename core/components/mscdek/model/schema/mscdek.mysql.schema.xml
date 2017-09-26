@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="mscdek" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="mscdek"
+	   version="1.1">
+
+	<object class="msCDEKCountry" table="mscdek_countries" extends="xPDOSimpleObject">
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="true" />
+		<field key="alias" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="alias" name="alias" primary="false" unique="true" type="BTREE">
+			<column key="alias" length="" collation="A" null="false" />
+		</index>
+
+		<composite alias="Cities" class="msCDEKCity" local="id" foreign="country" cardinality="many" owner="local" />
+	</object>
+
+	<object class="msCDEKCity" table="mscdek_cities" extends="xPDOSimpleObject">
+		<field key="city_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" index="index" />
+
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="true" />
+		<field key="country" dbtype="int" precision="11" phptype="integer" null="false" attributes="unsigned" />
+
+		<index alias="city_id" name="city_id" primary="false" unique="true" type="BTREE">
+			<column key="city_id" length="" collation="A" null="false" />
+		</index>
+
+		<index alias="country" name="country" primary="false" unique="false" type="BTREE">
+			<column key="country" length="" collation="A" null="false" />
+		</index>
+
+		<aggregate alias="Country" class="msCDEKCountry" local="country" foreign="id" cardinality="one" owner="foreign" />
+		<composite alias="Points" class="msCDEKDeliveryPoint" local="id" foreign="city" owner="local" cardinality="many" />
+		<composite alias="Deliveries" class="msCDEKDeliveryCity" local="id" foreign="city" cardinality="many" owner="local" />
+	</object>
+
+	<object class="msCDEKDeliveryCity" table="mscdek_delivery_availiblities" extends="xPDOSimpleObject">
+		<field key="city_from" dbtype="int" precision="11" phptype="integer" null="false" index="index"/>
+		<field key="city_to" dbtype="int" precision="11" phptype="integer" null="false" index="index"/>
+		<field key="tariff" dbtype="int" precision="11" phptype="integer" null="false" index="index"/>
+		<field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="false" default="1" />
+		<field key="updatedon" dbtype="timestamp" phptype="timestamp" null="true" default="NULL" attributes="ON UPDATE CURRENT_TIMESTAMP" />
+
+		<index alias="delivery_city" name="delivery_city" primary="false" unique="true" type="BTREE">
+			<column key="city_from" length="" collation="A" null="false" />
+			<column key="city_to" length="" collation="A" null="false" />
+			<column key="tariff" length="" collation="A" null="false" />
+		</index>
+
+		<aggregate alias="CityFrom" class="msCDEKCity" local="city_from" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="CityTo" class="msCDEKCity" local="city_to" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+	<object class="msCDEKDeliveryPoint" table="mscdek_delivery_points" extends="xPDOSimpleObject">
+		<field key="city" dbtype="int" precision="11" phptype="integer" null="false" attributes="unsigned" index="index" />
+		<field key="code" dbtype="varchar" precision="255" phptype="string" null="true" default="" />
+        <field key="type" dbtype="varchar" precision="3" null="false" phptype="string" default="dp" />
+        <field key="address" dbtype="text" null="true" phptype="string" />
+		<field key="phone" dbtype="varchar" precision="255" null="false" phptype="string" default=""/>
+		<field key="email" dbtype="varchar" precision="255" null="false" phptype="string" default="" />
+		<field key="time" dbtype="varchar" precision="255" null="false" phptype="string" default="" />
+		<field key="zip" dbtype="int" precision="11" null="false" phptype="integer" default="" />
+		<field key="weight_limit" dbtype="varchar" precision="50" null="false" phptype="string" default="" />
+		<field key="properties" dbtype="text" phptype="json"  null="true"/>
+
+		<index alias="city" name="city" primary="false" unique="false" type="BTREE">
+			<column key="city" length="" collation="A" null="false" />
+		</index>
+		<index alias="code" name="code" primary="false" unique="false" type="BTREE">
+			<column key="code" length="" collation="A" null="false" />
+		</index>
+
+		<aggregate alias="City" class="msCDEKCity" local="city" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+</model>

@@ -1,0 +1,1 @@
+<select id="deliveryPoints" class="form-control" name="deliveryPoint">[[+output]]</select>
