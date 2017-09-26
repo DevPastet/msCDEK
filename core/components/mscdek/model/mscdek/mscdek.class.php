@@ -246,7 +246,7 @@ class msCDEK {
         if (is_array($weightOrGoodsDimensions)) {
             $goodsDimensions = $weightOrGoodsDimensions;
         } else {
-            $goodsDimensions = array(array('weight' => $weightOrGoodsDimensions));
+            $goodsDimensions = array('weight' => $weightOrGoodsDimensions);
         }
         $error = null;
         $errorFields = array();

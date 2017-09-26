@@ -367,22 +367,24 @@ $(function () {
 
 
     $(function () {
-        if (APPConfig.$city_select["0"].nodeName == "SELECT") {
-            APPConfig.$city_select.on('change', function () {
-                console.log('change');
-                miniShop2.Order.add('city', $(this).val());
-                delivery_reset();
-                //  delivery_getPoints();
-            });
-            $.post('/assets/components/mscdek/action.php', {mscdek_action: "delivery/getcities"}, function (success) {
-                miniShop2.Order.add('city', '');
-                APPConfig.$city_select.html('<option value="">  Выберите  </option>' + success);
-            });
-        } else if (APPConfig.$city_select["0"].nodeName == "INPUT") {
-            APPConfig.$city_select.on('keyup', citySelectFunc);
-            selectID = document.getElementById("city_select");
-            selectID.addEventListener('cut', citySelectFunc);
-            selectID.addEventListener('paste', citySelectFunc);
+        if (typeof APPConfig.$city_select["0"] !== "undefined") {
+            if (APPConfig.$city_select["0"].nodeName == "SELECT") {
+                APPConfig.$city_select.on('change', function () {
+                    console.log('change');
+                    miniShop2.Order.add('city', $(this).val());
+                    delivery_reset();
+                    //  delivery_getPoints();
+                });
+                $.post('/assets/components/mscdek/action.php', {mscdek_action: "delivery/getcities"}, function (success) {
+                    miniShop2.Order.add('city', '');
+                    APPConfig.$city_select.html('<option value="">  Выберите  </option>' + success);
+                });
+            } else if (APPConfig.$city_select["0"].nodeName == "INPUT") {
+                APPConfig.$city_select.on('keyup', citySelectFunc);
+                selectID = document.getElementById("city_select");
+                selectID.addEventListener('cut', citySelectFunc);
+                selectID.addEventListener('paste', citySelectFunc);
+            }
         }
     }());
 
